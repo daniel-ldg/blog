@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "stylis-plugin-rtl": "^2.1.1",
     "superjson": "^1.12.2",
+    "swr": "^2.1.2",
     "typescript": "5.0.3",
     "zod": "^3.21.1"
   },
