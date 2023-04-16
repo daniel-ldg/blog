@@ -51,4 +51,6 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 	);
 });
 
+PostCard.displayName = "PostCard";
+
 export default PostCard;
