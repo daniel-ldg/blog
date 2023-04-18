@@ -3,6 +3,7 @@ import { Avatar, Badge, createStyles, Group } from "@mantine/core";
 import { Author } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const useStyles = createStyles(theme => ({
 	link: {
@@ -16,7 +17,11 @@ interface IProps {
 }
 
 const PostInfo: React.FC<IProps> = ({ author, date }) => {
+	const [formatedDate, setFormatedDate] = useState("...");
 	const { classes } = useStyles();
+	useEffect(() => {
+		setFormatedDate(formatDate(date));
+	}, []);
 	const avatar = (
 		<Avatar size={18} radius='xl'>
 			{author?.picture && <Image src={author.picture} alt={`Avatar de ${author.name}`} height={18} width={18} />}
@@ -32,7 +37,7 @@ const PostInfo: React.FC<IProps> = ({ author, date }) => {
 				</Link>
 			)}
 			<Badge color='gray' radius='sm'>
-				{formatDate(date)}
+				{formatedDate}
 			</Badge>
 		</Group>
 	);
