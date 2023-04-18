@@ -1,7 +1,9 @@
-import { Autocomplete, Box, Group, Header, Text, createStyles, rem } from "@mantine/core";
-import { IconPrompt, IconSearch } from "@tabler/icons-react";
+import { Autocomplete, Box, Group, Header, createStyles, rem } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import icon from "./scriniun-cropped.svg";
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -74,9 +76,8 @@ const SimpleHeader: React.FC<IProps> = ({ links = defaultLinks }) => {
 			<div className={classes.inner}>
 				<Link href={"/"} passHref legacyBehavior>
 					<Box component='a'>
-						<Group spacing={0}>
-							<IconPrompt size={28} />
-							<Text span>Blog</Text>
+						<Group spacing={5}>
+							<Image src={icon} alt='scriniun' height={18} />
 						</Group>
 					</Box>
 				</Link>
