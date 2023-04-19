@@ -4,6 +4,7 @@ import { Avatar, Badge, Card, createStyles, Flex, Group, Text, Title } from "@ma
 import { LinkProps } from "next/link";
 import React from "react";
 import CenteredImage from "../images/CenteredImage";
+import Keywords from "../post/Keywords";
 
 const useStyles = createStyles(theme => ({
 	card: {
@@ -39,13 +40,7 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 					</Text>
 				</Group>
 				{mainImage && <CenteredImage image={mainImage} />}
-				<Flex gap='sm' style={{ flexWrap: "wrap", overflow: "hidden", height: "18px" }}>
-					{post.keywords.map((keyword, i) => (
-						<Badge key={i} size='sm' color='gray' variant='outline' style={{ height: "18px" }}>
-							{keyword}
-						</Badge>
-					))}
-				</Flex>
+				<Keywords keywords={post.keywords} />
 			</Flex>
 		</Card>
 	);

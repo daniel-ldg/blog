@@ -3,6 +3,7 @@ import { Blockquote, Space, Title } from "@mantine/core";
 import React from "react";
 import CenteredImage from "../images/CenteredImage";
 import PostInfo from "./PostInfo";
+import Keywords from "./Keywords";
 
 interface IProps {
 	post: ExtendedPost;
@@ -37,6 +38,9 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 				{post.conclusion.map((paragraph, i) => (
 					<p key={i}>{paragraph}</p>
 				))}
+			</section>
+			<section>
+				<Keywords keywords={post.keywords} />
 			</section>
 		</article>
 	);
