@@ -89,3 +89,35 @@ export const getAllPostUrl = async (): Promise<string[]> => {
 	const foundPosts = await prismaInstance.post.findMany(validation.data);
 	return foundPosts.map(post => post.url);
 };
+
+export const searchPost = async (q: string) => {
+	const args: Prisma.PostAggregateRawArgs = {
+		pipeline: [
+			{
+				$search: {
+					text: {
+						query: `"${q}"`,
+						path: ["title", "introduction", "sections.title", "sections.paragraphs", "conclusion"],
+						fuzzy: {},
+					},
+					highlight: {
+						path: ["introduction", "sections.title", "sections.paragraphs", "conclusion"],
+						maxNumPassages: 1,
+					},
+				},
+			},
+			{ $limit: 4 },
+			{
+				$project: {
+					_id: 0,
+					title: 1,
+					url: 1,
+					highlights: { $meta: "searchHighlights" },
+					score: { $meta: "searchScore" },
+				},
+			},
+		],
+	};
+
+	return prismaInstance.post.aggregateRaw(args);
+};
