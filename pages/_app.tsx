@@ -1,4 +1,5 @@
 import SimpleHeader from "@/components/header/SimpleHeader";
+import SearchProvider from "@/components/search/SearchProvider";
 import { Container, MantineProvider } from "@mantine/core";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -22,10 +23,12 @@ const MyApp = (props: AppProps) => {
 					/** Put your mantine theme override here */
 					colorScheme: "light",
 				}}>
-				<SimpleHeader />
-				<Container size={"sm"} mb='xl'>
-					<Component {...pageProps} />
-				</Container>
+				<SearchProvider>
+					<SimpleHeader />
+					<Container size='sm' mb='xl' style={{ overflowX: "hidden" }}>
+						<Component {...pageProps} />
+					</Container>
+				</SearchProvider>
 			</MantineProvider>
 		</>
 	);

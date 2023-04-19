@@ -7,11 +7,14 @@
     "build": "next build",
     "start": "next start -p $PORT"
   },
-  "cacheDirectories": [".next/cache"],
+  "cacheDirectories": [
+    ".next/cache"
+  ],
   "dependencies": {
     "@mantine/core": "^6.0.6",
     "@mantine/hooks": "^6.0.6",
     "@mantine/next": "^6.0.6",
+    "@mantine/spotlight": "^6.0.8",
     "@prisma/client": "^4.12.0",
     "@tabler/icons-react": "^2.14.0",
     "@types/node": "18.15.11",

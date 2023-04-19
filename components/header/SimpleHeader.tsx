@@ -1,4 +1,5 @@
-import { Autocomplete, Box, Group, Header, createStyles, rem } from "@mantine/core";
+import { Box, Group, Header, Input, createStyles, rem } from "@mantine/core";
+import { useSpotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,6 +64,7 @@ const defaultLinks = [
 ];
 
 const SimpleHeader: React.FC<IProps> = ({ links = defaultLinks }) => {
+	const search = useSpotlight();
 	const { classes } = useStyles();
 
 	const items = links.map((link, i) => (
@@ -86,12 +88,20 @@ const SimpleHeader: React.FC<IProps> = ({ links = defaultLinks }) => {
 					<Group ml={50} spacing={5} className={classes.links}>
 						{items}
 					</Group>
-					{/* todo: implementar busqueda con autocompletar(debounce)*/}
-					<Autocomplete
+					<Input
 						className={classes.search}
 						placeholder='Buscar'
 						icon={<IconSearch size='1rem' stroke={1.5} />}
-						data={["React", "Angular", "Vue", "Next.js", "Riot.js", "Svelte", "Blitz.js"]}
+						readOnly
+						pointer
+						onClick={search.openSpotlight}
+						styles={theme => ({
+							input: {
+								"&:focus-within": {
+									borderColor: "#ced4da",
+								},
+							},
+						})}
 					/>
 				</Group>
 			</div>
