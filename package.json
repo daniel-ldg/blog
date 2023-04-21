@@ -26,6 +26,8 @@
     "next-superjson-plugin": "^0.5.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-schemaorg": "^2.0.0",
+    "schema-dts": "^1.1.2",
     "stylis-plugin-rtl": "^2.1.1",
     "superjson": "^1.12.2",
     "swr": "^2.1.2",

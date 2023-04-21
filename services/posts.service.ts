@@ -20,6 +20,7 @@ export const getPost = async (url: string): Promise<ExtendedPost | null> => {
 			title: true,
 			introduction: true,
 			conclusion: true,
+			url: true,
 		},
 	};
 	const validation = PostFindFirstSchema.safeParse(args);
