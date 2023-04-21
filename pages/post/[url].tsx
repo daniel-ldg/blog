@@ -115,8 +115,8 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 							name: "scriniun",
 							logo: {
 								"@type": "ImageObject",
-								"@id": "http://localhost:3000/_next/static/media/scriniun-cropped.1be1adc4.svg",
-								url: "http://localhost:3000/_next/static/media/scriniun-cropped.1be1adc4.svg",
+								"@id": "https://www.scriniun.com/_next/static/media/scriniun-cropped.1be1adc4.svg",
+								url: "https://www.scriniun.com/_next/static/media/scriniun-cropped.1be1adc4.svg",
 								width: "850",
 								height: "180",
 							},
