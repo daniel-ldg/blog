@@ -18,60 +18,11 @@ const useStyles = createStyles(theme => ({
 		justifyContent: "space-between",
 		alignItems: "center",
 	},
-
-	links: {
-		[theme.fn.smallerThan("md")]: {
-			display: "none",
-		},
-	},
-
-	search: {
-		[theme.fn.smallerThan("xs")]: {
-			display: "none",
-		},
-	},
-
-	link: {
-		display: "block",
-		lineHeight: 1,
-		padding: `${rem(8)} ${rem(12)}`,
-		borderRadius: theme.radius.sm,
-		textDecoration: "none",
-		color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
-		fontSize: theme.fontSizes.sm,
-		fontWeight: 500,
-
-		"&:hover": {
-			backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
-		},
-	},
 }));
 
-interface IProps {
-	links?: { link: string; label: string }[];
-}
-
-const defaultLinks = [
-	{
-		link: "/",
-		label: "Inicio",
-	},
-
-	{
-		link: "/autores",
-		label: "Autores",
-	},
-];
-
-const SimpleHeader: React.FC<IProps> = ({ links = defaultLinks }) => {
+const SimpleHeader: React.FC = () => {
 	const search = useSpotlight();
 	const { classes } = useStyles();
-
-	const items = links.map((link, i) => (
-		<Link key={i} href={link.link} className={classes.link}>
-			{link.label}
-		</Link>
-	));
 
 	return (
 		<Header height={56} className={classes.header}>
@@ -85,11 +36,7 @@ const SimpleHeader: React.FC<IProps> = ({ links = defaultLinks }) => {
 				</Link>
 
 				<Group>
-					<Group ml={50} spacing={5} className={classes.links}>
-						{items}
-					</Group>
 					<Input
-						className={classes.search}
 						placeholder='Buscar'
 						icon={<IconSearch size='1rem' stroke={1.5} />}
 						readOnly

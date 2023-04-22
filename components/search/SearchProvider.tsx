@@ -1,7 +1,8 @@
+import useViewportWidth from "@/hooks/useViewportWidth";
 import { Loader } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { SpotlightAction, SpotlightProvider } from "@mantine/spotlight";
-import { IconSearch } from "@tabler/icons-react";
+import { IconHome, IconSearch, IconUsersGroup } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import SuperJSON from "superjson";
@@ -19,8 +20,28 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 			.then(text => SuperJSON.parse(text))
 			.then(json => validation.parse(json));
 	const { data: searchResults, isLoading } = useSWR(`/api/search?q=${debouncedQuery}`, fercher);
+	const { sm } = useViewportWidth();
+
+	const defaultActions: SpotlightAction[] = [
+		{
+			title: "Inicio",
+			description: "Ir al inicio",
+			icon: <IconHome />,
+			onTrigger: () => router.push(`/`),
+		},
+		{
+			title: "Autores",
+			description: "Ver todos los autores",
+			icon: <IconUsersGroup />,
+			onTrigger: () => router.push(`/autores`),
+		},
+	];
 
 	useEffect(() => {
+		if (query === "") {
+			setActions(defaultActions);
+			return;
+		}
 		const newActions: SpotlightAction[] =
 			searchResults?.map(result => ({
 				title: result.title,
@@ -34,7 +55,7 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 				url: result.url,
 			})) || [];
 		setActions(newActions);
-	}, [searchResults]);
+	}, [searchResults, query]);
 
 	return (
 		<SpotlightProvider
@@ -42,9 +63,9 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 			query={query}
 			onQueryChange={setQuery}
 			searchIcon={<IconSearch size='1.2rem' />}
-			highlightQuery
 			searchPlaceholder='Buscar...'
-			nothingFoundMessage={isLoading ? <Loader variant='dots' /> : "Sin resultados..."}>
+			nothingFoundMessage={isLoading ? <Loader variant='dots' /> : "Sin resultados..."}
+			yOffset={sm ? 120 : 20}>
 			{children}
 		</SpotlightProvider>
 	);
