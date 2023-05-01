@@ -1,10 +1,12 @@
 import { ExtendedPost } from "@/services/posts.service";
 import { formatDate } from "@/utils/DateUtils";
-import { Avatar, Badge, Card, createStyles, Flex, Group, Text, Title } from "@mantine/core";
+import { Avatar, Card, createStyles, Flex, Group, Text, Title } from "@mantine/core";
 import { LinkProps } from "next/link";
 import React from "react";
 import CenteredImage from "../images/CenteredImage";
 import Keywords from "../post/Keywords";
+import Image from "next/image";
+import defaultImage from "../post/pexels-fauxels-3182774.jpg";
 
 const useStyles = createStyles(theme => ({
 	card: {
@@ -40,6 +42,14 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 					</Text>
 				</Group>
 				{mainImage && <CenteredImage image={mainImage} />}
+				{!mainImage && (
+					<Image
+						src={defaultImage}
+						height={300}
+						alt='Foto De Vista Superior De Personas Discutiendo'
+						style={{ marginLeft: "50%", transform: "translateX(-50%)" }}
+					/>
+				)}
 				<Keywords keywords={post.keywords} />
 			</Flex>
 		</Card>
