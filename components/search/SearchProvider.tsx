@@ -19,7 +19,10 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 			.then(r => r.text())
 			.then(text => SuperJSON.parse(text))
 			.then(json => validation.parse(json));
-	const { data: searchResults, isLoading } = useSWR(`/api/search?q=${debouncedQuery}`, fercher);
+	const { data: searchResults, isLoading } = useSWR(
+		debouncedQuery !== "" ? `/api/search?q=${debouncedQuery}` : null,
+		fercher
+	);
 	const { sm } = useViewportWidth();
 
 	const defaultActions: SpotlightAction[] = [
