@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { ParsedUrlQuery } from "querystring";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { BlogPosting } from "schema-dts";
+import { BlogPosting, FAQPage } from "schema-dts";
 
 interface IParams extends ParsedUrlQuery {
 	url: string;
@@ -43,6 +43,12 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 				lastName: post.author.name.split(" ").slice(1).join(" "),
 				userName: post.author.url,
 		  };
+
+	const questions = post.sections.reduce<{ question: string; answer: string }[]>((prev, curr) => {
+		const regex = new RegExp("¿.+\\\\?", "");
+		const match = curr.title.match(regex);
+		return match ? [...prev, { question: match.at(0)!, answer: curr.paragraphs.at(0)! }] : prev;
+	}, []);
 	return (
 		<>
 			<Head>
@@ -146,6 +152,22 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 						keywords: post.keywords,
 					})}
 				/>
+				{questions.length && (
+					<script
+						{...jsonLdScriptProps<FAQPage>({
+							"@context": "https://schema.org",
+							"@type": "FAQPage",
+							mainEntity: questions.map(entry => ({
+								"@type": "Question",
+								name: entry.question,
+								acceptedAnswer: {
+									"@type": "Answer",
+									text: entry.answer,
+								},
+							})),
+						})}
+					/>
+				)}
 			</Head>
 			<PostViewer post={post} />
 		</>
