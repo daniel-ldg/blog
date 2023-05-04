@@ -4,7 +4,6 @@ import { IconSearch } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import icon from "./scriniun-cropped.svg";
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -30,7 +29,7 @@ const SimpleHeader: React.FC = () => {
 				<Link href={"/"} passHref legacyBehavior>
 					<Box component='a'>
 						<Group spacing={5}>
-							<Image src={icon} alt='scriniun' height={18} />
+							<Image src='/scriniun_logo.svg' alt='scriniun' height={18} width={85} />
 						</Group>
 					</Box>
 				</Link>

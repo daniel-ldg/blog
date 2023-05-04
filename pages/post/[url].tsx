@@ -92,8 +92,6 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 					{...jsonLdScriptProps<BlogPosting>({
 						"@context": "https://schema.org",
 						"@type": "BlogPosting",
-						"@id": fullUrl,
-
 						headline: post.title,
 						name: post.title,
 						description,
@@ -102,12 +100,10 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 							? {
 									author: {
 										"@type": "Person",
-										"@id": `"https://www.scriniun.com/autor/${post.author.url}`,
 										name: post.author.name,
-										url: `"https://www.scriniun.com/autor/${post.author.url}`,
+										url: `https://www.scriniun.com/autor/${post.author.url}`,
 										image: {
 											"@type": "ImageObject",
-											"@id": post.author.picture,
 											url: post.author.picture,
 											height: "200",
 											width: "200",
@@ -117,12 +113,10 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 							: {}),
 						publisher: {
 							"@type": "Organization",
-							"@id": "https://scriniun.com",
 							name: "scriniun",
 							logo: {
 								"@type": "ImageObject",
-								"@id": "https://www.scriniun.com/_next/static/media/scriniun-cropped.1be1adc4.svg",
-								url: "https://www.scriniun.com/_next/static/media/scriniun-cropped.1be1adc4.svg",
+								url: "https://www.scriniun.com/scriniun_logo.svg",
 								width: "850",
 								height: "180",
 							},
@@ -131,7 +125,6 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 							? {
 									image: {
 										"@type": "ImageObject",
-										"@id": image.url,
 										url: image.url,
 										height: `${image.height}`,
 										width: `${image.width}`,
@@ -141,11 +134,9 @@ const ViewPost: React.FC<IProps> = ({ post }) => {
 						url: fullUrl,
 						isPartOf: {
 							"@type": "Blog",
-							"@id": "https://scriniun.com",
 							name: "scriniun",
 							publisher: {
 								"@type": "Organization",
-								"@id": "https://scriniun.com",
 								name: "scriniun",
 							},
 						},
