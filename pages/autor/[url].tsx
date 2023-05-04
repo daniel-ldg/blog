@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import { ParsedUrlQuery } from "querystring";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { Person } from "schema-dts";
+import { BreadcrumbList } from "schema-dts";
 
 interface IParams extends ParsedUrlQuery {
 	url: string;
@@ -68,23 +68,23 @@ const Autor: React.FC<IProps> = ({ author }) => {
 				<meta name='twitter:image' content={cardImage.url} />
 				{/* Google JSON-LD */}
 				<script
-					{...jsonLdScriptProps<Person>({
+					{...jsonLdScriptProps<BreadcrumbList>({
 						"@context": "https://schema.org",
-						"@type": "Person",
-						name: author.name,
-						birthPlace: author.location!,
-						colleague: author.degree!,
-						image: {
-							"@type": "ImageObject",
-							url: author.picture,
-							height: "200",
-							width: "200",
-						},
-						affiliation: {
-							"@type": "Organization",
-							name: "scriniun",
-							url: "https://www.scriniun.com",
-						},
+						"@type": "BreadcrumbList",
+						itemListElement: [
+							{
+								"@type": "ListItem",
+								position: 1,
+								name: "Autores",
+								item: "https://www.scriniun.com/autores",
+							},
+							{
+								"@type": "ListItem",
+								position: 2,
+								name: author.name,
+								item: `https://www.scriniun.com/autor/${author.url}`,
+							},
+						],
 					})}
 				/>
 			</Head>

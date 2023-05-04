@@ -38,40 +38,6 @@ const Home: React.FC = () => {
 				<meta name='twitter:title' content={siteName} />
 				<meta name='twitter:description' content={description} />
 				<meta name='twitter:image' content={cardImage.url} />
-				{/* Google JSON-LD */}
-				<script
-					{...jsonLdScriptProps<Blog>({
-						"@context": "https://schema.org",
-						"@type": "Blog",
-						mainEntityOfPage: url,
-						name: siteName,
-						description: description,
-						image: {
-							"@type": "ImageObject",
-							url: cardImage.url,
-							width: `${cardImage.width}`,
-							height: `${cardImage.height}`,
-						},
-						potentialAction: [
-							{
-								"@type": "Action",
-								name: "Autores",
-								description: "Ver todos los autores",
-								target: "https://www.scriniun.com/autores",
-							},
-						],
-						publisher: {
-							"@type": "Organization",
-							name: siteName,
-							logo: {
-								"@type": "ImageObject",
-								url: `${url}/scriniun_logo.svg`,
-								width: "850",
-								height: "180",
-							},
-						},
-					})}
-				/>
 			</Head>
 			<Title order={1} my='xl'>
 				Posts recientes

@@ -4,7 +4,7 @@ import { Author } from "@prisma/client";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { jsonLdScriptProps } from "react-schemaorg";
-import { WebSite } from "schema-dts";
+import { BreadcrumbList } from "schema-dts";
 
 interface IProps {
 	authors: Author[];
@@ -52,23 +52,17 @@ const Autores: React.FC<IProps> = ({ authors }) => {
 				<meta name='twitter:image' content={cardImage.url} />
 				{/* Google JSON-LD */}
 				<script
-					{...jsonLdScriptProps<WebSite>({
+					{...jsonLdScriptProps<BreadcrumbList>({
 						"@context": "https://schema.org",
-						"@type": "WebSite",
-						isPartOf: {
-							"@type": "Blog",
-							url: "https://www.scriniun.com",
-							name: siteName,
-							publisher: {
-								"@type": "Organization",
-								name: siteName,
+						"@type": "BreadcrumbList",
+						itemListElement: [
+							{
+								"@type": "ListItem",
+								position: 1,
+								name: "Autores",
+								item: "https://www.scriniun.com/autores",
 							},
-						},
-						potentialAction: authors.map(author => ({
-							"@type": "Action",
-							name: author.name,
-							target: `https://www.scriniun.com/autor/${author.url}`,
-						})),
+						],
 					})}
 				/>
 			</Head>
