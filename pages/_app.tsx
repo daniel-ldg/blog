@@ -26,7 +26,7 @@ const MyApp = (props: AppProps) => {
 				}}>
 				<SearchProvider>
 					<SimpleHeader />
-					<Container size='sm' mb='xl' style={{ overflowX: "hidden" }}>
+					<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
 						<Component {...pageProps} />
 					</Container>
 				</SearchProvider>
