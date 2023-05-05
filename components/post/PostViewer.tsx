@@ -4,7 +4,6 @@ import React from "react";
 import CenteredImage from "../images/CenteredImage";
 import PostInfo from "./PostInfo";
 import Keywords from "./Keywords";
-import defaultImage from "./pexels-fauxels-3182774.jpg";
 import Image from "next/image";
 
 interface IProps {
@@ -22,8 +21,9 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 			{mainImage && <CenteredImage image={mainImage} priority={true} />}
 			{!mainImage && (
 				<Image
-					src={defaultImage}
+					src='/placeholder.jpg'
 					height={300}
+					width={550}
 					alt='Foto De Vista Superior De Personas Discutiendo'
 					style={{ marginLeft: "50%", transform: "translateX(-50%)" }}
 				/>

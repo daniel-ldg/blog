@@ -6,7 +6,6 @@ import React from "react";
 import CenteredImage from "../images/CenteredImage";
 import Keywords from "../post/Keywords";
 import Image from "next/image";
-import defaultImage from "../post/pexels-fauxels-3182774.jpg";
 
 const useStyles = createStyles(theme => ({
 	card: {
@@ -44,8 +43,9 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 				{mainImage && <CenteredImage image={mainImage} />}
 				{!mainImage && (
 					<Image
-						src={defaultImage}
+						src='/placeholder.jpg'
 						height={300}
+						width={550}
 						alt='Foto De Vista Superior De Personas Discutiendo'
 						style={{ marginLeft: "50%", transform: "translateX(-50%)" }}
 					/>
