@@ -122,3 +122,77 @@ export const searchPost = async (q: string) => {
 
 	return prismaInstance.post.aggregateRaw(args);
 };
+
+interface SimilarSearchParams {
+	url: string;
+	title: string;
+	keywords: string[];
+}
+
+export const similar = async ({ url, title, keywords }: SimilarSearchParams) => {
+	const args: Prisma.PostAggregateRawArgs = {
+		pipeline: [
+			{
+				$search: {
+					compound: {
+						should: {
+							moreLikeThis: {
+								like: { title, keywords },
+							},
+						},
+						mustNot: { text: { query: url, path: "url" } },
+					},
+				},
+			},
+			{ $limit: 3 },
+			{
+				$lookup: {
+					from: "Author",
+					localField: "authorId",
+					foreignField: "_id",
+					as: "author",
+					pipeline: [
+						{
+							$project: {
+								_id: 0,
+								name: 1,
+							},
+						},
+					],
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					title: 1,
+					url: 1,
+					keywords: 1,
+					author: {
+						$arrayElemAt: ["$author", 0],
+					},
+					image: {
+						$arrayElemAt: ["$images", 0],
+					},
+				},
+			},
+		],
+	};
+
+	return prismaInstance.post.aggregateRaw(args).then(res =>
+		z
+			.object({
+				title: z.string(),
+				url: z.string(),
+				keywords: z.string().array(),
+				author: z.object({ name: z.string() }),
+				image: z.object({
+					url: z.string(),
+					alt: z.string(),
+					width: z.number(),
+					height: z.number(),
+				}),
+			})
+			.array()
+			.parse(res)
+	);
+};

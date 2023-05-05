@@ -5,6 +5,7 @@ import CenteredImage from "../images/CenteredImage";
 import PostInfo from "./PostInfo";
 import Keywords from "./Keywords";
 import Image from "next/image";
+import RelatedPosts from "../posts/related/RelatedPosts";
 
 interface IProps {
 	post: ExtendedPost;
@@ -53,6 +54,7 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 			<section>
 				<Keywords keywords={post.keywords} />
 			</section>
+			<RelatedPosts postUrl={post.url} />
 		</article>
 	);
 };
