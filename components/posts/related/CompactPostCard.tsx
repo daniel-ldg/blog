@@ -41,9 +41,15 @@ const CompactPostCard = React.forwardRef<HTMLAnchorElement, IPropsCard>(({ href,
 			onClick={onClick}
 			ref={ref}
 			withBorder
-			h={{ base: 100, sm: 200 }}
+			h={{ base: 125, sm: 200 }}
 			radius='md'>
-			<Image className={classes.backgroudImage} src={post.image.url} alt={post.image.alt} fill />
+			<Image
+				className={classes.backgroudImage}
+				src={post.image.url}
+				alt={post.image.alt}
+				fill
+				sizes='(max-width: 768px) 100vw, 33vw'
+			/>
 			<div className={classes.overlay} />
 			<Stack className={classes.content} align='flex-start' justify='flex-end' spacing={0}>
 				<Title order={5} c={"#FFF"}>
