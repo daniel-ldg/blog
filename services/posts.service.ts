@@ -144,7 +144,7 @@ export const similar = async ({ url, title, keywords }: SimilarSearchParams) => 
 					},
 				},
 			},
-			{ $limit: 3 },
+			{ $limit: 6 },
 			{
 				$lookup: {
 					from: "Author",
