@@ -1,8 +1,6 @@
 import PostListLoader from "@/components/posts/PostListsLoader";
 import { Title } from "@mantine/core";
 import Head from "next/head";
-import { jsonLdScriptProps } from "react-schemaorg";
-import { Blog } from "schema-dts";
 
 const Home: React.FC = () => {
 	const siteName = "scriniun";
