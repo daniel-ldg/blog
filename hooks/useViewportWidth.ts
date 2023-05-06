@@ -9,7 +9,6 @@ const useViewportWidth = () => {
 		md: width >= 768,
 		lg: width >= 992,
 		xl: width >= 1200,
-		xxl: width >= 1400,
 	};
 };
 
