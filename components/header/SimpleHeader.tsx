@@ -28,9 +28,7 @@ const SimpleHeader: React.FC = () => {
 			<div className={classes.inner}>
 				<Link href={"/"} passHref legacyBehavior>
 					<Box component='a'>
-						<Group spacing={5}>
-							<Image src='/scriniun_logo.svg' alt='scriniun' height={18} width={85} />
-						</Group>
+						<Image src='/scriniun_logo.svg' alt='scriniun' height={18} width={85} />
 					</Box>
 				</Link>
 
