@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CSSProperties, useEffect, useState } from "react";
 import { TagCloud } from "react-tagcloud";
+import Logo from "../header/Logo";
 
 const useStyles = createStyles(theme => ({
 	footer: {
@@ -33,11 +34,7 @@ const FooterLinks: React.FC = () => {
 				<Grid py='xl' justify='center'>
 					<Grid.Col span={10} sm={3} mb='xl'>
 						<Box>
-							<Link href={"/"} passHref legacyBehavior>
-								<Box component='a'>
-									<Image src='/scriniun_logo.svg' alt='scriniun' height={18} width={85} />
-								</Box>
-							</Link>
+							<Logo />
 							<Text size='xs' color='dimmed'>
 								Tu puerta al mundo de la tecnología y el desarrollo de software
 							</Text>

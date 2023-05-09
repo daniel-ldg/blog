@@ -1,9 +1,10 @@
-import { Box, Group, Header, Input, createStyles, rem } from "@mantine/core";
+import { ActionIcon, Box, Group, Header, Input, createStyles, rem, useMantineColorScheme } from "@mantine/core";
 import { useSpotlight } from "@mantine/spotlight";
-import { IconSearch } from "@tabler/icons-react";
+import { IconMoonStars, IconSearch, IconSun } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Logo from "./Logo";
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -22,16 +23,13 @@ const useStyles = createStyles(theme => ({
 const SimpleHeader: React.FC = () => {
 	const search = useSpotlight();
 	const { classes } = useStyles();
+	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+	const isDark = colorScheme === "dark";
 
 	return (
 		<Header height={56} className={classes.header}>
 			<div className={classes.inner}>
-				<Link href={"/"} passHref legacyBehavior>
-					<Box component='a'>
-						<Image src='/scriniun_logo.svg' alt='scriniun' height={18} width={85} />
-					</Box>
-				</Link>
-
+				<Logo />
 				<Group>
 					<Input
 						placeholder='Buscar'
@@ -39,14 +37,22 @@ const SimpleHeader: React.FC = () => {
 						readOnly
 						pointer
 						onClick={search.openSpotlight}
+						w={120}
 						styles={theme => ({
 							input: {
 								"&:focus-within": {
-									borderColor: "#ced4da",
+									borderColor: theme.colorScheme === "light" ? "#ced4da" : "#373A40",
 								},
 							},
 						})}
 					/>
+					<ActionIcon
+						variant='outline'
+						color={isDark ? "yellow" : "blue"}
+						onClick={() => toggleColorScheme()}
+						title='Toggle color scheme'>
+						{isDark ? <IconSun size='1.1rem' /> : <IconMoonStars size='1.1rem' />}
+					</ActionIcon>
 				</Group>
 			</div>
 		</Header>

@@ -1,12 +1,21 @@
 import FooterLinks from "@/components/footer/FooterLinks";
 import SimpleHeader from "@/components/header/SimpleHeader";
 import SearchProvider from "@/components/search/SearchProvider";
-import { Container, MantineProvider } from "@mantine/core";
+import { ColorScheme, ColorSchemeProvider, Container, MantineProvider } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
 const MyApp = (props: AppProps) => {
 	const { Component, pageProps } = props;
+
+	const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+		key: "color-scheme",
+		defaultValue: "light",
+		getInitialValueInEffect: true,
+	});
+
+	const toggleColorScheme = (value?: ColorScheme) => setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
 	return (
 		<>
@@ -18,21 +27,17 @@ const MyApp = (props: AppProps) => {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<MantineProvider
-				withGlobalStyles
-				withNormalizeCSS
-				theme={{
-					/** Put your mantine theme override here */
-					colorScheme: "light",
-				}}>
-				<SearchProvider>
-					<SimpleHeader />
-					<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
-						<Component {...pageProps} />
-					</Container>
-					<FooterLinks />
-				</SearchProvider>
-			</MantineProvider>
+			<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+				<MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
+					<SearchProvider>
+						<SimpleHeader />
+						<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
+							<Component {...pageProps} />
+						</Container>
+						<FooterLinks />
+					</SearchProvider>
+				</MantineProvider>
+			</ColorSchemeProvider>
 		</>
 	);
 };
