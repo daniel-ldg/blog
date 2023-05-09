@@ -52,7 +52,6 @@ const FooterLinks: React.FC = () => {
 									minSize={12}
 									maxSize={24}
 									renderer={linkRenderer}
-									randomSeed={12}
 								/>
 							</Stack>
 						)}
