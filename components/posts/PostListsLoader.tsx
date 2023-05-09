@@ -4,12 +4,12 @@ import React from "react";
 import PostsCardList from "./PostsCardList";
 
 interface IProps {
-	authorUrl?: string;
+	filter?: { authorUrl: string } | { keyword: string };
 	take?: number;
 }
 
-const PostListLoader: React.FC<IProps> = ({ authorUrl, take }) => {
-	const { data, error, isLoading, isValidating, fetchNext, isEndReached } = useSWRInfinitePosts(take, authorUrl);
+const PostListLoader: React.FC<IProps> = ({ filter, take }) => {
+	const { data, isLoading, fetchNext, isEndReached } = useSWRInfinitePosts(take, filter);
 	return (
 		<Group position='center'>
 			{data?.map((posts, i) => (

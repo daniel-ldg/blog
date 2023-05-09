@@ -70,13 +70,16 @@ interface GetPostByIdArgs extends Pagination {
 	authorUrl: string;
 }
 
-export const getPostsByAuthor = async ({ authorUrl, skip, take }: GetPostByIdArgs) => {
-	const validation = z.string().safeParse(authorUrl);
+export const getPostsByAuthor = async ({ authorUrl: url, skip, take }: GetPostByIdArgs) => {
+	return getPosts({ where: { author: { url } }, skip, take });
+};
 
-	if (!validation.success) {
-		return null;
+interface GetPostByKeywordArgs extends Pagination {
+	keyword: string;
 	}
-	return getPosts({ where: { author: { url: validation.data } }, skip, take });
+
+export const getPostsByKeyword = async ({ keyword, skip, take }: GetPostByKeywordArgs) => {
+	return getPosts({ where: { keywords: { has: keyword } }, skip, take });
 };
 
 export const getAllPostUrl = async (): Promise<string[]> => {
