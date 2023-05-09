@@ -52,7 +52,7 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 				))}
 			</section>
 			<section>
-				<Keywords keywords={post.keywords} />
+				<Keywords keywords={post.keywords} asLink hideOverflow={false} />
 			</section>
 			<RelatedPosts postUrl={post.url} />
 		</article>
