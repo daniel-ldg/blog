@@ -199,3 +199,20 @@ export const similar = async ({ url, title, keywords }: SimilarSearchParams) => 
 			.parse(res)
 	);
 };
+
+export const getKeywords = async () => {
+	const args: Prisma.PostAggregateRawArgs = {
+		pipeline: [
+			{ $unwind: { path: "$keywords", preserveNullAndEmptyArrays: false } },
+			{ $group: { _id: "$keywords", count: { $sum: 1 } } },
+			{ $project: { _id: 0, count: 1, keyword: "$_id" } },
+			{ $match: { count: { $gte: 2 } } },
+			{ $sort: { count: -1 } },
+			{ $limit: 10 },
+		],
+	};
+
+	return prismaInstance.post
+		.aggregateRaw(args)
+		.then(res => z.object({ keyword: z.string(), count: z.number() }).array().parse(res));
+};
