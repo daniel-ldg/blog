@@ -13,7 +13,7 @@ const AuthorViewer: React.FC<IProps> = ({ author }) => {
 			<AuthorCard author={author} />
 			<Box my='xl'>
 				<Text component='h2' size={20}>{`Lo último de ${author.name}`}</Text>
-				<PostListLoader authorUrl={author.url} take={3} />
+				<PostListLoader filter={{ authorUrl: author.url }} take={3} />
 			</Box>
 		</>
 	);
