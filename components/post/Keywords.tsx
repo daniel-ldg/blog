@@ -13,7 +13,7 @@ const Keywords: React.FC<IProps> = ({ keywords, asLink = false, hideOverflow = t
 		<Flex gap='sm' style={hideOverflow ? { flexWrap: "wrap", overflow: "hidden", height: "18px" } : { flexWrap: "wrap" }}>
 			{keywords.map((keyword, i) =>
 				asLink ? (
-					<Link key={i} href={{ hostname: "/buscar", query: { keyword } }} passHref legacyBehavior>
+					<Link key={i} href={{ pathname: "/buscar", query: { keyword } }} passHref legacyBehavior>
 						<ClickBadge label={keyword} />
 					</Link>
 				) : (
