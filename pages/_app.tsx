@@ -1,3 +1,4 @@
+import FooterLinks from "@/components/footer/FooterLinks";
 import SimpleHeader from "@/components/header/SimpleHeader";
 import SearchProvider from "@/components/search/SearchProvider";
 import { Container, MantineProvider } from "@mantine/core";
@@ -29,6 +30,7 @@ const MyApp = (props: AppProps) => {
 					<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
 						<Component {...pageProps} />
 					</Container>
+					<FooterLinks />
 				</SearchProvider>
 			</MantineProvider>
 		</>
