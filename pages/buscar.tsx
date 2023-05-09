@@ -1,6 +1,7 @@
 import PostListLoader from "@/components/posts/PostListsLoader";
 import { Badge, Group, Title } from "@mantine/core";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 import { z } from "zod";
 
 interface IProps {
@@ -28,6 +29,10 @@ export const getServerSideProps: GetServerSideProps<IProps> = async ({ query }) 
 const Buscar: React.FC<IProps> = ({ keyword }) => {
 	return (
 		<>
+			<Head>
+				<title>Buscar</title>
+				<meta name='robots' content='noindex' />
+			</Head>
 			<Title order={1} mt='xl'>
 				Búsqueda
 			</Title>
