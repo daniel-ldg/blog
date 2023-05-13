@@ -33,7 +33,7 @@ const EventViewer: React.FC<IProps> = ({ events }) => {
 								`${e.state} ${e.step} (${
 									new Date(e.timestamp).toLocaleTimeString() +
 									"." +
-									new Date(e.timestamp).getMilliseconds().toString().padStart(3, 0)
+									new Date(e.timestamp).getMilliseconds().toString().padStart(3, "0")
 								})\n${e.message}\n${JSON.stringify(e.metadata)}`
 						)
 						.join("\n\n")}
