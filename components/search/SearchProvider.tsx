@@ -2,7 +2,8 @@ import useViewportWidth from "@/hooks/useViewportWidth";
 import { Loader } from "@mantine/core";
 import { useDebouncedValue } from "@mantine/hooks";
 import { SpotlightAction, SpotlightProvider } from "@mantine/spotlight";
-import { IconHome, IconSearch, IconUsersGroup } from "@tabler/icons-react";
+import { IconHome, IconSearch, IconSquarePlus, IconUsersGroup } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import SuperJSON from "superjson";
@@ -14,6 +15,8 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	const [actions, setActions] = useState<SpotlightAction[]>([]);
 	const [query, setQuery] = useState("");
 	const [debouncedQuery] = useDebouncedValue(query, 200);
+	const { status: sessionStatus } = useSession();
+
 	const fercher = (url: string): Promise<SearchResult> =>
 		fetch(url)
 			.then(r => r.text())
@@ -42,7 +45,16 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 	useEffect(() => {
 		if (query === "") {
-			setActions(defaultActions);
+			let onEmptyQueryActions = defaultActions;
+			if (sessionStatus === "authenticated") {
+				onEmptyQueryActions.push({
+					title: "Crear post",
+					description: "Crear nuevo post con Open AI",
+					icon: <IconSquarePlus />,
+					onTrigger: () => router.push(`/crearPost`),
+				});
+			}
+			setActions(onEmptyQueryActions);
 			return;
 		}
 		const newActions: SpotlightAction[] =
@@ -58,7 +70,7 @@ const SearchProvider: React.FC<PropsWithChildren> = ({ children }) => {
 				url: result.url,
 			})) || [];
 		setActions(newActions);
-	}, [searchResults, query]);
+	}, [query, searchResults, sessionStatus]);
 
 	return (
 		<SpotlightProvider
