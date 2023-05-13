@@ -1,10 +1,9 @@
-import { ActionIcon, Box, Group, Header, Input, createStyles, rem, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Group, Header, Input, createStyles, rem, useMantineColorScheme } from "@mantine/core";
 import { useSpotlight } from "@mantine/spotlight";
-import { IconMoonStars, IconSearch, IconSun } from "@tabler/icons-react";
-import Image from "next/image";
-import Link from "next/link";
+import { IconLogin, IconLogout, IconMoonStars, IconSearch, IconSun } from "@tabler/icons-react";
 import React from "react";
 import Logo from "./Logo";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -25,6 +24,8 @@ const SimpleHeader: React.FC = () => {
 	const { classes } = useStyles();
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 	const isDark = colorScheme === "dark";
+	const { data: session, status } = useSession();
+	const isAuthenticated = status === "authenticated";
 
 	return (
 		<Header height={56} className={classes.header}>
@@ -52,6 +53,13 @@ const SimpleHeader: React.FC = () => {
 						onClick={() => toggleColorScheme()}
 						title='Toggle color scheme'>
 						{isDark ? <IconSun size='1.1rem' /> : <IconMoonStars size='1.1rem' />}
+					</ActionIcon>
+					<ActionIcon
+						variant='outline'
+						onClick={() => (!isAuthenticated ? signIn() : signOut({ callbackUrl: "/" }))}
+						disabled={status === "loading"}
+						title={isAuthenticated ? "Logout" : "Login"}>
+						{isAuthenticated ? <IconLogout size='1.1rem' /> : <IconLogin size='1.1rem' />}
 					</ActionIcon>
 				</Group>
 			</div>
