@@ -76,7 +76,7 @@ export const getPostsByAuthor = async ({ authorUrl: url, skip, take }: GetPostBy
 
 interface GetPostByKeywordArgs extends Pagination {
 	keyword: string;
-	}
+}
 
 export const getPostsByKeyword = async ({ keyword, skip, take }: GetPostByKeywordArgs) => {
 	return getPosts({ where: { keywords: { has: keyword } }, skip, take });
