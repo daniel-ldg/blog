@@ -49,4 +49,6 @@ const SelectItem = forwardRef<HTMLDivElement, ItemProps>(({ author, ...divProps 
 	</div>
 ));
 
+SelectItem.displayName = "SelectItem";
+
 export default AuthorSelect;
