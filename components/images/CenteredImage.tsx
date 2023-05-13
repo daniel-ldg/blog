@@ -1,3 +1,4 @@
+import { useMantineTheme } from "@mantine/core";
 import { Image as PrismaImage } from "@prisma/client";
 import Image from "next/image";
 
@@ -15,6 +16,10 @@ const CenteredImage: React.FC<IProps> = ({ image, desiredHeight = 300, priority 
 		width = Math.floor((desiredHeight * image.width) / image.height);
 	}
 
+	const { colorScheme } = useMantineTheme();
+	const isDarkMode = colorScheme === "dark";
+	const almostWhite = "#F9F6EE";
+
 	return (
 		<Image
 			priority={priority}
@@ -22,7 +27,12 @@ const CenteredImage: React.FC<IProps> = ({ image, desiredHeight = 300, priority 
 			alt={image.alt}
 			height={height}
 			width={width}
-			style={{ marginLeft: "50%", transform: "translateX(-50%)" }}
+			style={{
+				marginLeft: "50%",
+				transform: "translateX(-50%)",
+				background: isDarkMode ? almostWhite : "transparent",
+				borderRadius: "5px",
+			}}
 		/>
 	);
 };

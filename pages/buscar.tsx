@@ -1,5 +1,5 @@
 import PostListLoader from "@/components/posts/PostListsLoader";
-import { Badge, Group, Title } from "@mantine/core";
+import { Badge, Group, Title, useMantineTheme } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { z } from "zod";
@@ -27,6 +27,8 @@ export const getServerSideProps: GetServerSideProps<IProps> = async ({ query }) 
 };
 
 const Buscar: React.FC<IProps> = ({ keyword }) => {
+	const { colorScheme } = useMantineTheme();
+	const isDarkMode = colorScheme === "dark";
 	return (
 		<>
 			<Head>
@@ -40,7 +42,7 @@ const Buscar: React.FC<IProps> = ({ keyword }) => {
 				<>
 					<Group noWrap mb='xl'>
 						<Title order={3}>Keyword</Title>
-						<Badge color='dark' variant='outline'>
+						<Badge color={isDarkMode ? "gray" : "dark"} variant='outline'>
 							{keyword}
 						</Badge>
 					</Group>
