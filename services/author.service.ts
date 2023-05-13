@@ -36,6 +36,7 @@ export const getAllAuthors = async () => {
 			name: true,
 			picture: true,
 			url: true,
+			prompt: true,
 			_count: { select: { posts: true } },
 		},
 	};
