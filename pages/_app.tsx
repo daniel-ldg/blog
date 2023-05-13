@@ -30,13 +30,23 @@ const MyApp = ({ Component, pageProps: props }: AppProps) => {
 			<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
 				<MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
 					<SessionProvider session={session}>
-					<SearchProvider>
-						<SimpleHeader />
-						<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
-							<Component {...pageProps} />
-						</Container>
-						<FooterLinks />
-					</SearchProvider>
+						<SearchProvider>
+							<div
+								style={{
+									minHeight: "100vh",
+									display: "grid",
+									gridTemplateRows: "auto 1fr auto",
+								}}>
+								<SimpleHeader />
+								<Container
+									size='sm'
+									mb='xl'
+									style={{ overflowX: "hidden", paddingBottom: "10px", width: "100%" }}>
+									<Component {...pageProps} />
+								</Container>
+								<FooterLinks />
+							</div>
+						</SearchProvider>
 					</SessionProvider>
 				</MantineProvider>
 			</ColorSchemeProvider>
