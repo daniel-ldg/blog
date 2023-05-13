@@ -3,12 +3,12 @@ import SimpleHeader from "@/components/header/SimpleHeader";
 import SearchProvider from "@/components/search/SearchProvider";
 import { ColorScheme, ColorSchemeProvider, Container, MantineProvider } from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
+import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 
-const MyApp = (props: AppProps) => {
-	const { Component, pageProps } = props;
-
+const MyApp = ({ Component, pageProps: props }: AppProps) => {
+	const { session, ...pageProps } = props;
 	const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
 		key: "color-scheme",
 		defaultValue: "light",
@@ -29,6 +29,7 @@ const MyApp = (props: AppProps) => {
 
 			<ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
 				<MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
+					<SessionProvider session={session}>
 					<SearchProvider>
 						<SimpleHeader />
 						<Container size='sm' mb='xl' style={{ overflowX: "hidden", paddingBottom: "10px" }}>
@@ -36,6 +37,7 @@ const MyApp = (props: AppProps) => {
 						</Container>
 						<FooterLinks />
 					</SearchProvider>
+					</SessionProvider>
 				</MantineProvider>
 			</ColorSchemeProvider>
 		</>
