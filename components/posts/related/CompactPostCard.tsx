@@ -1,3 +1,4 @@
+import { placeholderPostImage } from "@/components/images/Placeholders";
 import { SimilarPostsResponse } from "@/pages/api/getSimilar";
 import { Flatten } from "@/utils/TypeUtils";
 import { Card, Stack, Text, Title, createStyles } from "@mantine/core";
@@ -33,7 +34,7 @@ interface IPropsCard extends Partial<LinkProps> {
 
 const CompactPostCard = React.forwardRef<HTMLAnchorElement, IPropsCard>(({ href, onClick, post }, ref) => {
 	const { classes } = useStyles();
-
+	const image = post.image ?? placeholderPostImage;
 	return (
 		<Card
 			component='a'
@@ -45,8 +46,8 @@ const CompactPostCard = React.forwardRef<HTMLAnchorElement, IPropsCard>(({ href,
 			radius='md'>
 			<Image
 				className={classes.backgroudImage}
-				src={post.image.url}
-				alt={post.image.alt}
+				src={image.url}
+				alt={image.alt}
 				fill
 				sizes='(max-width: 768px) 100vw, 33vw'
 			/>

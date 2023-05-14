@@ -5,7 +5,7 @@ import { LinkProps } from "next/link";
 import React from "react";
 import CenteredImage from "../images/CenteredImage";
 import Keywords from "../post/Keywords";
-import Image from "next/image";
+import { placeholderPostImage } from "../images/Placeholders";
 
 const useStyles = createStyles(theme => ({
 	card: {
@@ -21,7 +21,7 @@ interface IProps extends Partial<LinkProps> {
 
 const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, post }, ref) => {
 	const { classes } = useStyles();
-	const mainImage = post.images.at(0);
+	const mainImage = post.images.at(0) ?? placeholderPostImage;
 	return (
 		<Card component='a' href={href?.toString()} onClick={onClick} ref={ref} withBorder radius='md' className={classes.card}>
 			<Flex direction='column' gap='sm'>
@@ -40,16 +40,7 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 						{formatDate(post.createdAt, "medium")}
 					</Text>
 				</Group>
-				{mainImage && <CenteredImage image={mainImage} />}
-				{!mainImage && (
-					<Image
-						src='/placeholder.jpg'
-						height={300}
-						width={550}
-						alt='Foto De Vista Superior De Personas Discutiendo'
-						style={{ marginLeft: "50%", transform: "translateX(-50%)" }}
-					/>
-				)}
+				<CenteredImage image={mainImage} />
 				<Keywords keywords={post.keywords} />
 			</Flex>
 		</Card>

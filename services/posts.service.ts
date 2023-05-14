@@ -188,12 +188,14 @@ export const similar = async ({ url, title, keywords }: SimilarSearchParams) => 
 				url: z.string(),
 				keywords: z.string().array(),
 				author: z.object({ name: z.string() }),
-				image: z.object({
-					url: z.string(),
-					alt: z.string(),
-					width: z.number(),
-					height: z.number(),
-				}),
+				image: z
+					.object({
+						url: z.string(),
+						alt: z.string(),
+						width: z.number(),
+						height: z.number(),
+					})
+					.optional(),
 			})
 			.array()
 			.parse(res)
