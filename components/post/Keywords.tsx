@@ -1,6 +1,8 @@
+import useElevation from "@/hooks/useElevation";
 import { Badge, Flex } from "@mantine/core";
+import { useHover, useMergedRef } from "@mantine/hooks";
 import Link, { LinkProps } from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface IProps {
 	keywords: string[];
@@ -31,12 +33,21 @@ interface IPropsBadge extends Partial<LinkProps> {
 }
 
 const ClickBadge = React.forwardRef<HTMLAnchorElement, IPropsBadge>(({ href, onClick, label }, ref) => {
+	const { ref: hoverRef, hovered } = useHover<HTMLAnchorElement>();
+	const { ref: elevationRef, setElevation } = useElevation();
+
+	useEffect(() => {
+		setElevation(hovered ? "high" : "low");
+	}, [hovered]);
+
+	const mergedRef = useMergedRef(ref, hoverRef, elevationRef);
+
 	return (
 		<Badge
 			component='a'
 			href={href?.toString()}
 			onClick={onClick}
-			ref={ref}
+			ref={mergedRef}
 			size='sm'
 			color='gray'
 			variant='outline'

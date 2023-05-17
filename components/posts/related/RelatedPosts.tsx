@@ -23,7 +23,7 @@ const RelatedPosts: React.FC<IProps> = ({ postUrl }) => {
 			<Title order={4} mb='sm' mt='xl'>
 				Te puede interesar
 			</Title>
-			<Grid>
+			<Grid pb='lg'>
 				{posts.map((post, i) => (
 					<Grid.Col xs={12} sm={4} key={i}>
 						<Link passHref legacyBehavior href={`/post/${post.url}`}>
