@@ -19,24 +19,26 @@ interface IProps {
 const PostInfo: React.FC<IProps> = ({ author, date }) => {
 	const [formatedDate, setFormatedDate] = useState("...");
 	const { classes } = useStyles();
+
 	useEffect(() => {
 		setFormatedDate(formatDate(date));
 	}, []);
+
 	const avatar = (
 		<Avatar size={18} radius='xl'>
 			{author?.picture && <Image src={author.picture} alt={`Avatar de ${author.name}`} height={18} width={18} />}
 		</Avatar>
 	);
 	return (
-		<Group mb={"xl"}>
+		<Group mt='xs' mb='md'>
 			{author && (
 				<Link href={`/autor/${author.url}`} passHref legacyBehavior>
-					<Badge component='a' color='gray' radius='sm' pl={0} leftSection={avatar} className={classes.link}>
+					<Badge component='a' color='gray' radius='xl' pl={0} leftSection={avatar} className={classes.link}>
 						{author.name}
 					</Badge>
 				</Link>
 			)}
-			<Badge color='gray' radius='sm'>
+			<Badge color='gray' radius='xl'>
 				{formatedDate}
 			</Badge>
 		</Group>
