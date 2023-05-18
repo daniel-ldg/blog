@@ -51,11 +51,11 @@ const useElevation = (initial: Elevation = "low") => {
 		};
 
 		const high: DOMKeyframesDefinition = {
-			boxShadow: `0.3px 0.5px 0.7px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
-                    0.8px 1.6px 2px -0.8px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
-                    2.1px 4.1px 5.2px -1.7px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
+			boxShadow: `0.3px 0.3px 0.7px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
+                    0.8px 0.8px 2px -0.8px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
+                    2.1px 2.1px 5.2px -1.7px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36),
                     5px 5px 12.6px -2.5px hsl(${hue}deg ${saturation}% ${lightness}% / 0.36)`,
-			y: -3,
+			y: -2,
 		};
 		const options: ValueAnimationTransition = { duration: 0.3 };
 		const animation = elevation === "low" ? low : high;
