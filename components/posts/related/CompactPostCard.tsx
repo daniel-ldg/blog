@@ -4,6 +4,8 @@ import { SimilarPostsResponse } from "@/pages/api/getSimilar";
 import { Flatten } from "@/utils/TypeUtils";
 import { Card, Stack, Text, Title, createStyles } from "@mantine/core";
 import { useHover, useMergedRef } from "@mantine/hooks";
+import { IconArrowUpRight } from "@tabler/icons-react";
+import { useAnimate } from "framer-motion";
 import Image from "next/image";
 import { LinkProps } from "next/link";
 import React, { useEffect } from "react";
@@ -20,13 +22,17 @@ const useStyles = createStyles(theme => ({
 		left: 0,
 		right: 0,
 		bottom: 0,
-		backgroundImage: "linear-gradient(180deg, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .8) 90%)",
+		backgroundImage: "linear-gradient(180deg, rgba(0, 0, 0, .2) 0%, rgba(0, 0, 0, .8) 90%)",
 		zIndex: 1,
 	},
 	content: {
 		position: "relative",
 		height: "100%",
-		zIndex: 1,
+		zIndex: 2,
+	},
+	icon: {
+		position: "absolute",
+		zIndex: 2,
 	},
 }));
 
@@ -40,24 +46,29 @@ const CompactPostCard = React.forwardRef<HTMLAnchorElement, IPropsCard>(({ href,
 
 	const { ref: hoverRef, hovered } = useHover<HTMLAnchorElement>();
 	const { ref: elevationRef, setElevation } = useElevation();
+	const [imageRef, animateImage] = useAnimate();
+	const [iconRef, animateIcon] = useAnimate();
 
 	useEffect(() => {
-		setElevation(hovered ? "high" : "low");
+		const elevation = hovered ? "high" : "low";
+		setElevation(elevation);
+
+		const imageAnimation = { scale: hovered ? 1.1 : 1 };
+		const imageOptions = { duration: hovered ? 5 : 0.3 };
+		animateImage(imageRef.current, imageAnimation, imageOptions);
+
+		const iconAnimation = hovered ? { top: 0, right: 0, opacity: 1 } : { top: 5, right: 5, opacity: 0.5 };
+		animateIcon(iconRef.current, iconAnimation);
 	}, [hovered]);
 
 	const mergedRef = useMergedRef(ref, hoverRef, elevationRef);
 
 	return (
-		<Card
-			component='a'
-			href={href?.toString()}
-			onClick={onClick}
-			ref={mergedRef}
-			withBorder
-			h={{ base: 125, sm: 200 }}
-			radius='md'>
+		<Card component='a' href={href?.toString()} onClick={onClick} ref={mergedRef} h={{ base: 125, sm: 200 }} radius='md'>
+			<IconArrowUpRight className={classes.icon} ref={iconRef} size={30} stroke={3} color='white' />
 			<Image
 				className={classes.backgroudImage}
+				ref={imageRef}
 				src={image.url}
 				alt={image.alt}
 				fill
