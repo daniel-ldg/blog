@@ -1,5 +1,5 @@
-import { SentEvent } from "@/pages/api/createPost";
-import { Button, Code, Input, Stack, Title } from "@mantine/core";
+import { SentEvent, createExpectedBody } from "@/pages/api/createPost";
+import { Button, Code, Input, Slider, Stack, Title } from "@mantine/core";
 import { EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
 import { Author } from "@prisma/client";
 import { IconArticle, IconBrandOpenai } from "@tabler/icons-react";
@@ -22,13 +22,20 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const [eventsByStep, setEventsByStep] = useState<Map<string, SentEvent[]>>(new Map());
 	const handleSelect = (url: string) => setAuthor(authors.find(value => value.url === url));
+	const [sections, setSections] = useState(3);
+	const [paragraphs, setParagraphs] = useState(3);
 
 	const create = async () => {
+		const createBody: createExpectedBody = {
+			author: author?.url ?? "",
+			title: title !== "" ? title : undefined,
+			options: { sections, paragraphs },
+		};
 		await fetchEventSource("/api/createPost", {
 			keepalive: true,
 			openWhenHidden: true,
 			method: "POST",
-			body: JSON.stringify({ author: author?.url, ...(title !== "" ? { title } : {}) }),
+			body: JSON.stringify(createBody),
 			onopen: async () => {
 				setEventsByStep(new Map());
 				setIsConnected(true);
@@ -88,7 +95,27 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 						rightSectionWidth={120}
 					/>
 				</Input.Wrapper>
-				<Button disabled={!author} loading={isConnected} onClick={create} fullWidth>
+				<Input.Wrapper label='Número de secciones'>
+					<Slider
+						min={1}
+						max={10}
+						value={sections}
+						onChange={setSections}
+						marks={Array.from(Array(10).keys()).map(i => ({ value: i + 1 }))}
+						disabled={isConnected}
+					/>
+				</Input.Wrapper>
+				<Input.Wrapper label='Número de parrafos por sección'>
+					<Slider
+						min={1}
+						max={3}
+						value={paragraphs}
+						onChange={setParagraphs}
+						marks={Array.from(Array(3).keys()).map(i => ({ value: i + 1 }))}
+						disabled={isConnected}
+					/>
+				</Input.Wrapper>
+				<Button disabled={!author} loading={isConnected} onClick={create} fullWidth mt='sm'>
 					Crear post
 				</Button>
 				<EventViewer events={eventsByStep} />

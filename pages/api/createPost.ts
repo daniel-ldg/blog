@@ -32,13 +32,7 @@ const handler: NextApiHandler = async (req, res) => {
 	}
 
 	// Validate body input
-	const bodyValidation = z
-		.object({
-			author: z.string(),
-			title: z.string().optional(),
-		})
-		.strict()
-		.safeParse(JSON.parse(body));
+	const bodyValidation = expectedBodyValidation.safeParse(JSON.parse(body));
 
 	if (!bodyValidation.success) {
 		return res.status(400).end(JSON.stringify(bodyValidation.error));
@@ -79,6 +73,13 @@ const handler: NextApiHandler = async (req, res) => {
 			content: `Usa el tema principal (título): "${bodyValidation.data.title}"`,
 		});
 	}
+
+	const numSections = bodyValidation.data.options?.sections ?? 3;
+	const numParagraphs = bodyValidation.data.options?.paragraphs ?? 3;
+	completionRequest.messages.push({
+		role: "user",
+		content: `Incluye ${numSections} secciones, cada sección debe contener ${numParagraphs} parrafos`,
+	});
 
 	sse.push(genMessage(messages.startPrompt, { request: completionRequest }));
 
@@ -272,5 +273,26 @@ interface Metadata {
 	timestamp: number;
 }
 export type SentEvent = Omit<Message, "step"> & Metadata;
+
+const expectedBodyValidation = z
+	.object({
+		author: z.string(),
+		title: z.string().optional(),
+		options: z
+			.object({
+				sections: z.coerce
+					.number()
+					.refine(val => val >= 1 && val <= 10)
+					.optional(),
+				paragraphs: z.coerce
+					.number()
+					.refine(val => val >= 1 && val <= 3)
+					.optional(),
+			})
+			.optional(),
+	})
+	.strict();
+
+export type createExpectedBody = z.infer<typeof expectedBodyValidation>;
 
 export default handler;
