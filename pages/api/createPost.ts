@@ -105,7 +105,7 @@ const handler: NextApiHandler = async (req, res) => {
 			}),
 			sections: z
 				.object({
-					subtitle: z.string().transform(subtitle => subtitle.replace(/(?:^\d{1,2}\.?\s)/, "")),
+					subtitle: z.string().transform(subtitle => subtitle.replace(/^\d{1,2}[.)]?\s/, "")),
 					content: z.array(z.string()),
 				})
 				.array(),
