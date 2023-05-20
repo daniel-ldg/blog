@@ -1,4 +1,6 @@
-const apiKey = process.env.SERP_API_KEY;
+import { getJson } from "serpapi";
+
+const api_key = process.env.SERP_API_KEY;
 
 export interface ImageResult {
 	url: string;
@@ -8,27 +10,25 @@ export interface ImageResult {
 }
 
 export const searchImagesSerpApi = (q: string): Promise<ImageResult[]> => {
-	return new Promise(resolve => {
-		const SerpApi = require("google-search-results-nodejs");
-		const search = new SerpApi.GoogleSearch(apiKey);
+	return getJson("google", { api_key, q, safe: "active", tbm: "isch", device: "desktop" }).then(result => {
+		const images = result?.images_results;
+		if (!Array.isArray(images)) {
+			throw new Error("Unexpected SerpAPI response");
+		}
 
-		const params = {
-			engine: "google",
-			q: q,
-			safe: "active",
-			tbm: "isch",
-			device: "desktop",
-		};
+		const results: ImageResult[] = images
+			.map(image => ({
+				url: image.original,
+				alt: image.title,
+				width: image.original_width,
+				height: image.original_height,
+			}))
+			.filter(i => i.url && i.alt && i.height && i.width);
 
-		search.json(params, (data: { images_results: any[] }) => {
-			resolve(
-				data.images_results.map((r: any) => ({
-					url: r.original,
-					alt: r.title,
-					width: r.original_width,
-					height: r.original_height,
-				}))
-			);
-		});
+		if (!results.length) {
+			throw new Error("No results");
+		}
+
+		return results;
 	});
 };
