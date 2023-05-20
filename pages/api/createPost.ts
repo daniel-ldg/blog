@@ -129,23 +129,23 @@ const handler: NextApiHandler = async (req, res) => {
 	// search images
 	let foundImages: ImageResult[] = [];
 
-	sse.push(genMessage(messages.startImageSearch, { serp_api: responseObject.searchQuery }, 0));
-	const serpApiResponse = await searchImagesSerpApi(responseObject.searchQuery);
-	if (!serpApiResponse.length) {
-		sse.push(genMessage(messages.failImageSearch, { serpApiResponse }, 0));
-	} else {
-		foundImages = serpApiResponse;
-		sse.push(genMessage(messages.successImageSearch, { serpApiResponse }, 0));
+	sse.push(genMessage(messages.startImageSearch, { searching: responseObject.searchQuery }, 0));
+	try {
+		foundImages = await searchImagesSerpApi(responseObject.searchQuery);
+		sse.push(genMessage(messages.successImageSearch, { foundImages }, 0));
+	} catch (error) {
+		sse.push(genMessage(messages.failImageSearch, { error }, 0));
+		foundImages = [];
 	}
 
 	if (!foundImages.length) {
-		sse.push(genMessage(messages.startImageSearch, { scale_serp: responseObject.searchQuery }, 1));
-		const scaleSerpResponse = await searchImagesScaleSerp(responseObject.searchQuery);
-		if (!scaleSerpResponse.length) {
-			sse.push(genMessage(messages.failImageSearch, { scaleSerpResponse }, 1));
-		} else {
-			foundImages = scaleSerpResponse;
-			sse.push(genMessage(messages.successImageSearch, { scaleSerpResponse }, 1));
+		sse.push(genMessage(messages.startImageSearch, { searching: responseObject.searchQuery }, 1));
+		try {
+			foundImages = await searchImagesScaleSerp(responseObject.searchQuery);
+			sse.push(genMessage(messages.successImageSearch, { foundImages }, 1));
+		} catch (error) {
+			sse.push(genMessage(messages.failImageSearch, { error }, 1));
+			foundImages = [];
 		}
 	}
 
