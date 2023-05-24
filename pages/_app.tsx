@@ -1,3 +1,4 @@
+import QuickActions from "@/components/admin/QuickActions";
 import FooterLinks from "@/components/footer/FooterLinks";
 import SimpleHeader from "@/components/header/SimpleHeader";
 import SearchProvider from "@/components/search/SearchProvider";
@@ -54,7 +55,8 @@ const MyApp = ({ Component, pageProps: props }: AppProps) => {
 								<Container
 									size='sm'
 									mb='xl'
-									style={{ overflowX: "hidden", paddingBottom: "10px", width: "100%" }}>
+									style={{ overflowX: "hidden", paddingBottom: "10px", width: "100%", position: "relative" }}>
+									<QuickActions />
 									<Component {...pageProps} />
 								</Container>
 								<FooterLinks />
