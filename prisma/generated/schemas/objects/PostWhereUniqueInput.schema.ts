@@ -5,6 +5,7 @@ import type { Prisma } from '@prisma/client';
 const Schema: z.ZodType<Prisma.PostWhereUniqueInput> = z
   .object({
     id: z.string().optional(),
+    url: z.string().optional(),
   })
   .strict();
 
