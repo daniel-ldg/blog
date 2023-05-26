@@ -1,6 +1,6 @@
-import { PostFindFirstSchema, PostFindManySchema } from "@/prisma/generated/schemas";
+import { PostFindFirstSchema, PostFindManySchema, PostUpdateOneSchema } from "@/prisma/generated/schemas";
 import { prismaInstance } from "@/prisma/PrismaInstance";
-import { Author, Post, Prisma } from "@prisma/client";
+import { Author, Image, Post, Prisma } from "@prisma/client";
 import { z } from "zod";
 
 export interface ExtendedPost extends Post {
@@ -217,4 +217,31 @@ export const getKeywords = async () => {
 	return prismaInstance.post
 		.aggregateRaw(args)
 		.then(res => z.object({ keyword: z.string(), count: z.number() }).array().parse(res));
+};
+
+export const getPostImages = async (url: string): Promise<Image[]> => {
+	const args: Prisma.PostFindFirstArgs = {
+		where: { url },
+		select: {
+			images: true,
+		},
+	};
+
+	const validation = PostFindFirstSchema.safeParse(args);
+	if (!validation.success) {
+		throw new Error("Invalid args");
+	}
+
+	return prismaInstance.post.findFirst(validation.data).then(post => post?.images ?? []);
+};
+
+export const updatePostImages = async (url: string, images: Image[]): Promise<Image[]> => {
+	const args: Prisma.PostUpdateArgs = {
+		where: { url },
+		data: { images },
+	};
+
+	const validated = PostUpdateOneSchema.parse(args);
+
+	return prismaInstance.post.update(validated).then(updatedPost => updatedPost.images);
 };
