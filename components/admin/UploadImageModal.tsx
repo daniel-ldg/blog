@@ -22,9 +22,9 @@ const UploadImageModal: React.FC<Props> = ({ opened, onClose, onUploaded }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const isFileSelected = !!files.length;
 	const preview = files
-		.map(file => {
+		.map((file, i) => {
 			const imageUrl = URL.createObjectURL(file);
-			return <Image src={imageUrl} alt='preview' style={{ objectFit: "contain" }} height={100} width={200} />;
+			return <Image key={i} src={imageUrl} alt='preview' style={{ objectFit: "contain" }} height={100} width={200} />;
 		})
 		.at(0);
 
