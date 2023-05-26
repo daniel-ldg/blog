@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import ActionRevalidate from "./ActionRevalidate";
 import React from "react";
+import ActionManageImages from "./post/ActionManageImages";
 
 const QuickActions: React.FC = () => {
 	const { status } = useSession();
@@ -18,6 +19,7 @@ const QuickActions: React.FC = () => {
 	const isPost = pathname === "/post/[url]";
 	if (isPost) {
 		actions.push(<ActionRevalidate path={asPath} onRevalidation={reload} />);
+		actions.push(<ActionManageImages postPath={asPath} />);
 	}
 
 	if (!actions.length) {
