@@ -1,4 +1,4 @@
-import { Alert, Button, Group, LoadingOverlay, Modal, Skeleton, Stack } from "@mantine/core";
+import { Alert, Button, Grid, Group, LoadingOverlay, Modal, Skeleton, Stack } from "@mantine/core";
 import useSWRMutation, { MutationFetcher } from "swr/mutation";
 import { Image } from "@prisma/client";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ import { z } from "zod";
 import useMutableList from "@/hooks/useMutableList";
 import { Flatten } from "@/utils/TypeUtils";
 import { IconAlertCircle, IconArrowBigDown, IconArrowBigUp, IconCloudUpload, IconTrash } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
 import UploadImageModal from "../UploadImageModal";
 
 interface ModalProps {
@@ -147,6 +147,7 @@ interface PreviewImageProps {
 }
 
 const PreviewImage: React.FC<PreviewImageProps> = ({ image, index, max, onMoveUp, onMoveDown, onRemove, onAdd }) => {
+	const { ref, width } = useElementSize();
 	const placeholder: Image = {
 		url: "/no_image_placeholder.svg",
 		alt: "no image",
@@ -159,27 +160,31 @@ const PreviewImage: React.FC<PreviewImageProps> = ({ image, index, max, onMoveUp
 	const isFirstPlaceholder = index === max + 1;
 
 	return (
-		<Group grow>
-			<Stack spacing={5} align='center'>
-				<Button variant='default' color='gray' compact disabled={isPlaceholder} onClick={onRemove}>
-					<IconTrash stroke={1} />
-				</Button>
-				<Button variant='default' color='gray' compact disabled={!isFirstPlaceholder} onClick={onAdd}>
-					<IconCloudUpload stroke={1} />
-				</Button>
-			</Stack>
-			<div>
-				<CenteredImage image={isPlaceholder ? placeholder : image} desiredHeight={100} />
-			</div>
-			<Stack spacing={5} align='center'>
-				<Button variant='default' color='gray' compact disabled={isFirstImage || isPlaceholder} onClick={onMoveUp}>
-					<IconArrowBigUp stroke={1} />
-				</Button>
-				<Button variant='default' color='gray' compact disabled={isLastImage || isPlaceholder} onClick={onMoveDown}>
-					<IconArrowBigDown stroke={1} />
-				</Button>
-			</Stack>
-		</Group>
+		<Grid justify='center' align='center'>
+			<Grid.Col span={2}>
+				<Stack spacing={5}>
+					<Button variant='default' color='gray' compact disabled={isPlaceholder} onClick={onRemove}>
+						<IconTrash stroke={1} />
+					</Button>
+					<Button variant='default' color='gray' compact disabled={!isFirstPlaceholder} onClick={onAdd}>
+						<IconCloudUpload stroke={1} />
+					</Button>
+				</Stack>
+			</Grid.Col>
+			<Grid.Col ref={ref} span={8}>
+				<CenteredImage image={isPlaceholder ? placeholder : image} desiredHeight={100} maxWidth={width} />
+			</Grid.Col>
+			<Grid.Col span={2}>
+				<Stack spacing={5}>
+					<Button variant='default' color='gray' compact disabled={isFirstImage || isPlaceholder} onClick={onMoveUp}>
+						<IconArrowBigUp stroke={1} />
+					</Button>
+					<Button variant='default' color='gray' compact disabled={isLastImage || isPlaceholder} onClick={onMoveDown}>
+						<IconArrowBigDown stroke={1} />
+					</Button>
+				</Stack>
+			</Grid.Col>
+		</Grid>
 	);
 };
 

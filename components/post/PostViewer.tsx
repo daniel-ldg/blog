@@ -19,14 +19,14 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 		<article>
 			<Title>{post.title}</Title>
 			<PostInfo author={post.author} date={post.createdAt} />
-			<CenteredImage image={mainImage} priority={true} />
+			<CenteredImage image={mainImage} priority={true} desiredHeight={300} />
 			<Blockquote cite={`- ${post.quote?.author || "Anónimo"}`}>{post.quote?.text}</Blockquote>
 			<section>
 				{post.introduction.map((paragraph, i) => (
 					<p key={i}>{paragraph}</p>
 				))}
 			</section>
-			{extraImageOne && <CenteredImage image={extraImageOne} />}
+			{extraImageOne && <CenteredImage image={extraImageOne} desiredHeight={300} />}
 			{post.sections.map((section, i) => (
 				<section key={i}>
 					{section.title && <h2>{section.title}</h2>}
@@ -35,7 +35,7 @@ const PostViewer: React.FC<IProps> = ({ post }) => {
 					))}
 				</section>
 			))}
-			{extraImageTwo && <CenteredImage image={extraImageTwo} />}
+			{extraImageTwo && <CenteredImage image={extraImageTwo} desiredHeight={300} />}
 			{!extraImageTwo && <Divider my='sm' />}
 			<section>
 				{post.conclusion.map((paragraph, i) => (

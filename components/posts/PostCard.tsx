@@ -40,7 +40,7 @@ const PostCard = React.forwardRef<HTMLAnchorElement, IProps>(({ href, onClick, p
 						{formatDate(post.createdAt, "medium")}
 					</Text>
 				</Group>
-				<CenteredImage image={mainImage} />
+				<CenteredImage image={mainImage} desiredHeight={300} />
 				<Keywords keywords={post.keywords} />
 			</Flex>
 		</Card>

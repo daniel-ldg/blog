@@ -5,15 +5,20 @@ import Image from "next/image";
 interface IProps {
 	image: PrismaImage;
 	priority?: boolean;
-	desiredHeight?: number;
+	desiredHeight: number;
+	maxWidth?: number;
 }
 
-const CenteredImage: React.FC<IProps> = ({ image, desiredHeight = 300, priority = false }) => {
+const CenteredImage: React.FC<IProps> = ({ image, desiredHeight, maxWidth, priority = false }) => {
 	let height = image.height;
 	let width = image.width;
 	if (height > desiredHeight) {
 		height = desiredHeight;
 		width = Math.floor((desiredHeight * image.width) / image.height);
+	}
+	if (maxWidth && width > maxWidth) {
+		width = maxWidth;
+		height = Math.floor((maxWidth * image.height) / image.width);
 	}
 
 	const { colorScheme } = useMantineTheme();
