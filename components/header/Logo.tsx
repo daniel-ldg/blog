@@ -10,7 +10,14 @@ const Logo = () => {
 	return (
 		<Link href={"/"} passHref legacyBehavior>
 			<Box component='a'>
-				<Image key={`logo_${isDark ? "dark" : "light"}`} src={logo} alt='scriniun logo' height={18} width={85} />
+				<Image
+					key={`logo_${isDark ? "dark" : "light"}`}
+					src={logo}
+					alt='scriniun logo'
+					height={18}
+					width={85}
+					style={{ pointerEvents: "none" }}
+				/>
 			</Box>
 		</Link>
 	);
