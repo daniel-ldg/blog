@@ -245,3 +245,10 @@ export const updatePostImages = async (url: string, images: Image[]): Promise<Im
 
 	return prismaInstance.post.update(validated).then(updatedPost => updatedPost.images);
 };
+
+export const deletePost = async (url: string) => {
+	const args: Prisma.PostDeleteArgs = {
+		where: { url },
+	};
+	return prismaInstance.post.delete(args);
+};

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import ActionRevalidate from "./ActionRevalidate";
 import React from "react";
 import ActionManageImages from "./post/ActionManageImages";
+import ActionDeletePost from "./post/ActionDeletePost";
 
 const QuickActions: React.FC = () => {
 	const { status } = useSession();
@@ -20,6 +21,7 @@ const QuickActions: React.FC = () => {
 	if (isPost) {
 		actions.push(<ActionRevalidate path={asPath} onRevalidation={reload} />);
 		actions.push(<ActionManageImages postPath={asPath} />);
+		actions.push(<ActionDeletePost postPath={asPath} />);
 	}
 
 	if (!actions.length) {
