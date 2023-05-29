@@ -38,29 +38,33 @@ const ManageImagesModal: React.FC<ModalProps> = ({ opened, onClose, postUrl: pos
 	const midImage = 1;
 	const bottomImage = 2;
 
-	const setupImage = (i: number) => (
-		<PreviewImage
-			image={serverImages?.at(i)}
-			index={i}
-			max={serverImages ? serverImages.length - 1 : 0}
-			onMoveDown={() =>
-				moveAfter(i)
-					.then(updated => trigger(updated))
-					.catch(console.error)
-			}
-			onMoveUp={() =>
-				moveBefore(i)
-					.then(updated => trigger(updated))
-					.catch(console.error)
-			}
-			onRemove={() =>
-				remove(i)
-					.then(updated => trigger(updated))
-					.catch(console.error)
-			}
-			onAdd={openUpload}
-		/>
-	);
+	const setupImage = (i: number) => {
+		const image = serverImages?.at(i);
+		return (
+			<PreviewImage
+				key={image ? `image_${i}` : `placeholder_${i}`}
+				image={image}
+				index={i}
+				max={serverImages ? serverImages.length - 1 : 0}
+				onMoveDown={() =>
+					moveAfter(i)
+						.then(updated => trigger(updated))
+						.catch(console.error)
+				}
+				onMoveUp={() =>
+					moveBefore(i)
+						.then(updated => trigger(updated))
+						.catch(console.error)
+				}
+				onRemove={() =>
+					remove(i)
+						.then(updated => trigger(updated))
+						.catch(console.error)
+				}
+				onAdd={openUpload}
+			/>
+		);
+	};
 
 	const onAddedImage = (newImage: Image) => {
 		if (serverImages) {
