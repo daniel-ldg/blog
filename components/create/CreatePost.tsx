@@ -1,8 +1,8 @@
 import { SentEvent, createExpectedBody } from "@/pages/api/createPost";
-import { Button, Code, Input, Slider, Stack, Title } from "@mantine/core";
+import { Button, Code, Group, Input, Slider, Stack, Title } from "@mantine/core";
 import { EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
 import { Author } from "@prisma/client";
-import { IconArticle, IconBrandOpenai } from "@tabler/icons-react";
+import { IconArticle, IconBrandOpenai, IconBulb } from "@tabler/icons-react";
 import { useState } from "react";
 import SuperJSON from "superjson";
 import AuthorSelect from "../author/AuthorSelect";
@@ -10,6 +10,7 @@ import EventViewer from "./EventViewer";
 import { useDisclosure } from "@mantine/hooks";
 import TitleAssistant from "./TitleAssistant";
 import Head from "next/head";
+import SuggestionsDrawer from "./SuggestionsDrawer";
 
 interface IProps {
 	authors: Author[];
@@ -19,6 +20,7 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 	const [author, setAuthor] = useState<Author | undefined>(undefined);
 	const [title, setTitle] = useState<string>("");
 	const [isOpenAsistant, { open: openAssistant, close: closeAssistant }] = useDisclosure();
+	const [isOpenSuggestions, { open: openSuggestions, close: closeSuggestions }] = useDisclosure();
 	const [isConnected, setIsConnected] = useState<boolean>(false);
 	const [eventsByStep, setEventsByStep] = useState<Map<string, SentEvent[]>>(new Map());
 	const handleSelect = (url: string) => setAuthor(authors.find(value => value.url === url));
@@ -57,17 +59,6 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 		});
 	};
 
-	const assistantButton = (
-		<Button
-			leftIcon={<IconBrandOpenai size='1.5em' />}
-			onClick={openAssistant}
-			variant='default'
-			compact
-			disabled={isConnected}>
-			Asistente
-		</Button>
-	);
-
 	return (
 		<>
 			<Head>
@@ -91,10 +82,26 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 						value={title}
 						onChange={e => setTitle(e.target.value)}
 						disabled={isConnected}
-						rightSection={assistantButton}
 						rightSectionWidth={120}
 					/>
 				</Input.Wrapper>
+				<Group grow>
+					<Button
+						leftIcon={<IconBrandOpenai size='1.5em' />}
+						onClick={openAssistant}
+						variant='default'
+						disabled={isConnected}>
+						Asistente
+					</Button>
+					<Button
+						fullWidth
+						leftIcon={<IconBulb size='1.5em' />}
+						onClick={openSuggestions}
+						variant='default'
+						disabled={isConnected}>
+						Sugerencias
+					</Button>
+				</Group>
 				<Input.Wrapper label='Número de secciones'>
 					<Slider
 						min={1}
@@ -121,6 +128,7 @@ const CreatePost: React.FC<IProps> = ({ authors }) => {
 				<EventViewer events={eventsByStep} />
 			</Stack>
 			<TitleAssistant isOpen={isOpenAsistant} onClose={closeAssistant} onSelect={setTitle} />
+			<SuggestionsDrawer isOpen={isOpenSuggestions} onClose={closeSuggestions} onSelect={setTitle} />
 		</>
 	);
 };
