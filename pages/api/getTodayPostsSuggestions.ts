@@ -7,7 +7,7 @@ import { CreateChatCompletionRequest } from "openai";
 import { z } from "zod";
 
 const PROMPT = process.env.PROMPT_GET_SUBREDDIT_SUGGESTIONS;
-const SUBREDDITS = ["webdev", "programming", "SoftwareEngineering", "userexperience", "ExperiencedDevs", "coding"];
+const SUBREDDITS = ["webdev", "programming", "SoftwareEngineering", "userexperience"];
 const MAX_SUGGESTIONS = 5;
 const TIME = "day";
 
