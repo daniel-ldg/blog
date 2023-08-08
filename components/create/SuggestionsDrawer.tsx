@@ -18,9 +18,10 @@ const SuggestionsDrawer: FC<IProps> = ({ isOpen, onClose, onSelect }) => {
 
 	const fetcher: Fetcher<ApiResponse, string> = url => fetch(url).then(r => r.json());
 	const config: SWRConfiguration<ApiResponse> = {
-		onSuccess: data => setActiveTab(data.suggestions.at(0)?.subreddit),
+		onSuccess: data => data.ok && setActiveTab(data.suggestions.at(0)?.subreddit),
 	};
 	const { data, error, isLoading } = useSWRImmutable(SUGGESTIONS_API_URL, fetcher, config);
+	const successfulApiCall = !error && data?.ok;
 
 	const errorMessage = (
 		<Stack align='center'>
@@ -35,8 +36,8 @@ const SuggestionsDrawer: FC<IProps> = ({ isOpen, onClose, onSelect }) => {
 	return (
 		<Drawer opened={isOpen} onClose={onClose} position='right' size='lg' title='Sugerencias' zIndex={2000}>
 			<LoadingOverlay visible={isLoading} overlayBlur={2} />
-			{error && errorMessage}
-			{data && (
+			{!isLoading && !successfulApiCall && errorMessage}
+			{successfulApiCall && (
 				<Tabs value={activeTab} onTabChange={setActiveTab}>
 					<Tabs.List>
 						{data.suggestions.map((s, i) => (

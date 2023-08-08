@@ -1,6 +1,7 @@
 import { OpenAI } from "@/services/api/openai";
 import { RedditResponse, getTopPosts } from "@/services/api/reddit";
 import { getErrorMessage } from "@/utils/ErrorUtils";
+import sendChunkedBody from "@/utils/ServerUtils";
 import { randomString } from "@/utils/StringUtils";
 import { NextApiHandler } from "next";
 import { CreateChatCompletionRequest } from "openai";
@@ -11,24 +12,32 @@ const SUBREDDITS = ["webdev", "programming", "SoftwareEngineering", "userexperie
 const MAX_SUGGESTIONS = 5;
 const TIME = "day";
 
-export interface ApiResponse {
+interface ApiResponseSuccess {
+	ok: true;
 	suggestions: { subreddit: string; posts: { title: string; id?: string; suggestion?: string }[] }[];
 }
 
-interface ErrorResponse {
+interface ApiResponseError {
+	ok: false;
 	message: string;
 }
 
-const handler: NextApiHandler<ApiResponse | ErrorResponse> = async (req, res) => {
+export type ApiResponse = ApiResponseSuccess | ApiResponseError;
+
+const handler: NextApiHandler<ApiResponse> = async (req, res) => {
 	if (typeof PROMPT !== "string") {
-		return res.status(500).end("Config error: PROMPT_GET_SUBREDDIT_SUGGESTIONS");
+		res.status(500);
+		res.json({ ok: false, message: "Config error: PROMPT_GET_SUBREDDIT_SUGGESTIONS" });
+		return res.end();
 	}
 
-	const { method, body } = req;
+	const { method } = req;
+
 	if (method !== "GET") {
+		res.status(405);
 		res.setHeader("Allow", ["GET"]);
-		res.status(405).end(`Method ${method} Not Allowed`);
-		return;
+		res.json({ ok: false, message: `Method ${method} Not Allowed` });
+		return res.end();
 	}
 
 	// GET Reddit data
@@ -40,18 +49,34 @@ const handler: NextApiHandler<ApiResponse | ErrorResponse> = async (req, res) =>
 		redditData.push(getTopPosts({ subreddit, limit, t }));
 	});
 
-	const redditResponses = await Promise.allSettled(redditData);
+	// fetch each subreddit data and filter out unsuccessful responses
+	const assertFullfilled = (
+		response: PromiseSettledResult<RedditResponse>
+	): response is PromiseFulfilledResult<RedditResponse> =>
+		response.status === "fulfilled" && response.value.posts.length !== 0;
+	const redditResponses = await Promise.allSettled(redditData).then(responses => responses.filter(assertFullfilled));
 
-	const suggestions: ApiResponse["suggestions"] = [];
+	if (redditResponses.length === 0) {
+		res.status(500);
+		res.json({ ok: false, message: "Reddit data not available" });
+		return res.end();
+	}
+
+	// send response on a serie of chunks
+	res.setHeader("Content-Type", "application/json");
+	const { write } = sendChunkedBody(res);
+
+	// extending heroku timeout
+	// heroku will terminate a request connection if no data is sent back to the client within 30 seconds
+	const extender = setInterval(() => write(" "), 10000);
+
+	const suggestions: ApiResponseSuccess["suggestions"] = [];
 
 	redditResponses.forEach(response => {
-		if (response.status === "fulfilled") {
-			const { subreddit, posts } = response.value;
-			suggestions.push({ subreddit, posts: posts.map(p => ({ ...p, id: randomString(3) })) });
-		}
+		const { subreddit, posts } = response.value;
+		suggestions.push({ subreddit, posts: posts.map(p => ({ ...p, id: randomString(3) })) });
 	});
 
-	// Prompt OpenAI API
 	const completionRequest: CreateChatCompletionRequest = {
 		model: "gpt-3.5-turbo",
 		temperature: 0.5,
@@ -66,30 +91,32 @@ const handler: NextApiHandler<ApiResponse | ErrorResponse> = async (req, res) =>
 		],
 	};
 
-	// Validate response
-	let json;
+	let extendedResponse: ApiResponse;
+
 	try {
+		// Prompt OpenAI API
 		const openAIresponse = await OpenAI.createChatCompletion(completionRequest);
-		json = JSON.parse(openAIresponse.data.choices.at(0)!.message!.content);
+		const json = JSON.parse(openAIresponse.data.choices.at(0)!.message!.content);
+
+		// validate api response
+		const responseValidation = z.object({ posts: z.object({ id: z.string(), suggestion: z.string() }).array() });
+		const responseObject = responseValidation.parse(json);
+
+		extendedResponse = {
+			ok: true,
+			suggestions: suggestions.map(s => ({
+				...s,
+				posts: s.posts.map(p => ({ ...p, ...responseObject.posts.find(r => r.id === p.id) })),
+			})),
+		};
 	} catch (error) {
-		const message = getErrorMessage(error);
-		res.status(500).json({ message });
-		return res.end();
+		const message = "Error: Unexpected AI response";
+		extendedResponse = { ok: false, message };
+	} finally {
+		clearInterval(extender);
 	}
 
-	const responseValidation = z.object({ posts: z.object({ id: z.string(), suggestion: z.string() }).array() });
-	const responseObject = responseValidation.safeParse(json);
-	if (!responseObject.success) {
-		res.status(500).json({ message: responseObject.error.format()._errors.join(",") });
-		return res.end();
-	}
-
-	res.status(200).json({
-		suggestions: suggestions.map(s => ({
-			...s,
-			posts: s.posts.map(p => ({ ...p, ...responseObject.data.posts.find(r => r.id === p.id) })),
-		})),
-	});
+	write(JSON.stringify(extendedResponse));
 	return res.end();
 };
 
